@@ -18,7 +18,6 @@ export default {
     },
     props:{
         scrollOption:{
-            
         }
     },
     mounted() {
