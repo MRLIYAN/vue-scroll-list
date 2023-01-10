@@ -93,7 +93,7 @@ export default {
                     let cha = 0;
                     
                     if(this.option.loop){
-                        cha = contH;
+                        cha = viewH;
                         if(this.i < cha){
                             this.i = this.i + this.option.speed * 0.4;
                         }else{
