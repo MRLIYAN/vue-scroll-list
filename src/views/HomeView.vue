@@ -39,7 +39,7 @@ export default {
         width: 400px;
         height: 400px;
         border: 1px solid red;
-        overflow: hidden;
+        overflow: auto;
     }
 
     ul {

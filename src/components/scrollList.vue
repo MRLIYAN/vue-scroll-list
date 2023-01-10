@@ -44,7 +44,7 @@ export default {
         }
 
         this.$nextTick(() => {
-            this.contView().style.height = this.slot0().clientHeight+'px';
+            this.view().style.height = this.slot0().clientHeight+'px';
             //判断初始化是否需要滚动，以及展示第二个
             if(this.slot0().clientHeight < this.viewH){
                 this.isScroll =false;
@@ -72,6 +72,9 @@ export default {
         },
         viewH(){ //视图高度
             return this.$refs.listScrollContentCtain.getBoundingClientRect().height;
+        },
+        view(){
+            return this.$refs.listScrollContentCtain;
         },
         contView(){ //内容dom
             return this.$refs.listScrollContent;
@@ -116,13 +119,13 @@ export default {
 
 <style lang="scss" scoped>
 .list-scroll-ctain{
-    width: 100%; height: 100%;
+    // width: 100%; height: 100%;
     &,& *{
         margin:0; padding: 0; box-sizing: border-box;
     }
     .listScrollContentCtain{
         width: 100%;
-        height: 100%;
+        overflow: hidden;
     }
 }
 </style>
