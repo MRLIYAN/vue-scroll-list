@@ -3,7 +3,7 @@
         <div class="list-ctain">
             <scrollList :scrollOption="scrollOption">
                 <ul>
-                    <li v-for="count in 13" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
+                    <li v-for="count in 20" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
                 </ul>
             </scrollList>
         </div>

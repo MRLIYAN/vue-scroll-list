@@ -26,9 +26,6 @@ export default {
         }
     },
     props:['scrollOption'],
-    computed: {
-       
-    },
     mounted() {
         //默认设置无缝滚动
         this.$set(this.option, 'loop', true);
