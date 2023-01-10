@@ -1,5 +1,5 @@
 <template>
-    <div class="list-scroll-ctain">
+    <div class="listScrollContainer" ref="listScrollContainer">
         <div class="listScrollContentCtain" ref="listScrollContentCtain">
             <div class="listScrollContent" ref="listScrollContent">
                 <div>
@@ -41,7 +41,11 @@ export default {
         }
 
         this.$nextTick(() => {
-            this.view().style.height = this.slot0().clientHeight+'px';
+            if(this.option.loop){
+                // 给视图添加高度，高度是内容的插槽的一个高度，防止无缝滚动外边添加滚动条会导致高度撑开超出，滚动底部出现留白。
+                this.contView().style.height = this.slot0().clientHeight+'px';
+            }
+           
             //判断初始化是否需要滚动，以及展示第二个
             if(this.slot0().clientHeight < this.viewH){
                 this.isScroll =false;
@@ -52,10 +56,10 @@ export default {
             }
 
             if(this.option.hoverStop){
-                this.contView().onmouseenter = () => {
+                this.view().onmouseenter = () => {
                     this.isScroll = false;
                 }
-                this.contView().onmouseleave = () => {
+                this.view().onmouseleave = () => {
                     this.isScroll = true;
                     this.scroll();
                 }
@@ -64,17 +68,20 @@ export default {
         
     },
     methods:{
-        contH(){ //内容高度
-            return this.$refs.listScrollContent.getBoundingClientRect().height;
+        view(){ // 最外层视图
+            return this.$refs.listScrollContainer;
         },
-        viewH(){ //视图高度
-            return this.$refs.listScrollContentCtain.getBoundingClientRect().height;
+        viewH(){ //最外层视图高度
+            return this.$refs.listScrollContainer.clientHeight;
         },
-        view(){
+        contView(){ //内容视图
             return this.$refs.listScrollContentCtain;
         },
-        contView(){ //内容dom
+        cont(){ //内容
             return this.$refs.listScrollContent;
+        },
+        contH(){ //内容高度
+            return this.$refs.listScrollContent.clientHeight;
         },
         slot0(){ //插槽1
             return this.$refs.listScrollContent.children[0];
@@ -90,11 +97,13 @@ export default {
                     let cha = 0;
                     
                     if(this.option.loop){
-                        cha = viewH;
+                        //无缝滚动，获取内容高度
+                        cha = this.slot0().clientHeight;
                         if(this.i < cha){
                             this.i = this.i + this.option.speed * 0.4;
                         }else{
                             this.i = 0;
+                            // this.$emit('scrollEnd','aa');
                         }
                     }else{
                         cha = contH - viewH;
@@ -102,10 +111,12 @@ export default {
                             this.i = this.i + this.option.speed * 0.4;
                         }else{
                             this.i = 0;
+                            // 非无缝滚动模式下，滚动到底部触发scrollEnd回调，可以监听是否滚动到底部
+                            this.$emit('scrollEnd','aa');
                         }
                     }
                     
-                    this.contView().style.transform = `translateY(${-this.i}px)`;
+                    this.cont().style.transform = `translateY(${-this.i}px)`;
                     window.requestAnimationFrame(this.scroll)
                 }
             })
@@ -115,8 +126,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.list-scroll-ctain{
-    // width: 100%; height: 100%;
+.listScrollContainer{
+    width: 100%; height: 100%;
     &,& *{
         margin:0; padding: 0; box-sizing: border-box;
     }
