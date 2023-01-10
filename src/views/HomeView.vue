@@ -3,7 +3,7 @@
         <div class="list-ctain">
             <scrollList :scrollOption="scrollOption">
                 <ul>
-                    <li v-for="count in 20" :key="count">{{ count }}、消息消息消息</li>
+                    <li v-for="count in 13" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
                 </ul>
             </scrollList>
         </div>
@@ -19,10 +19,17 @@ export default {
     data() {
         return {
             scrollOption:{
-                speed:0.4,
+                speed:1.5,//滚动速度 1~10 数字越大速度越快
+                hoverStop:true,//是否开启鼠标悬停
+                loop:true, //是否无缝滚动，默认开启
             }
         }
     },
+    methods:{
+        msg(val){
+            alert(val)
+        }
+    }
 }
 </script>
 
