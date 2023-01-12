@@ -20,7 +20,7 @@ export default {
         return {
             i:0,
             isContH:false,
-            isScroll:true,
+            isScroll:true, //是否允许滚动
             option:{}
         }
     },
@@ -51,15 +51,16 @@ export default {
         slot0(){ //插槽1
             return this.$refs.listScrollContent.children[0];
         },
+        slot0H(){ //插槽1高度
+            return this.$refs.listScrollContent.children[0].clientHeight;
+        },
         slot1(){ //插槽2
             return this.$refs.listScrollContent.children[1];
         },
     },
     mounted() {
-        //默认设置无缝滚动
-        this.$set(this.option, 'loop', true);
-        this.option = {...this.scrollOption}
-        console.log(this.option);
+        //默认参数
+        this.initProps();
 
         //限制速度，设置0~100
         if(this.option.speed <= 0) { 
@@ -77,8 +78,8 @@ export default {
             }
            
             //判断初始化是否需要滚动，以及展示第二个
-            if(this.slot0.clientHeight < this.viewH){
-                this.isScroll =false;
+            if(this.slot0H < this.viewH){ //视图是否超出
+                this.isScroll = false;
                 this.isContH = false;
             }else{
                 this.scroll();
@@ -90,14 +91,27 @@ export default {
                     this.isScroll = false;
                 }
                 this.view.onmouseleave = () => {
-                    this.isScroll = true;
-                    this.scroll();
+                    if(this.isContH){ //内容超出视图才允许滚动
+                        this.isScroll = true;
+                        this.scroll();
+                    }
                 }
             }
         })
         
     },
     methods:{
+        initProps() {
+            this.option = {
+                //滚动速度 0~100 数字越大速度越快，默认5
+                speed: this.scrollOption.speed ? this.scrollOption.speed : 5,
+                //是否开启鼠标悬停,默认关闭
+                hoverStop: this.scrollOption.hoverStop ? ((this.scrollOption.hoverStop === 'true' || this.scrollOption.hoverStop === true) ? true : false) : false,
+                //是否无缝滚动，默认开启
+                loop:(this.scrollOption.loop) ? ((this.scrollOption.loop === 'true' || this.scrollOption.loop === true) ? true : false) : ((this.scrollOption.loop === 'false' || this.scrollOption.loop === false) ? false : true),
+            }
+            console.log(this.option);
+        },
         scroll(){
             this.$nextTick(() => {
                 if(this.isScroll){
