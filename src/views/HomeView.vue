@@ -45,13 +45,13 @@ export default {
     data() {
         return {
             scrollOption:{
-                speed:5,
+                speed:3,
                 hoverStop:true,
                 loop:true, 
                 direction:'up',
             },
             scrollOption2:{
-                speed:5,
+                speed:4,
                 hoverStop:false,
                 loop:true, 
                 direction:'down',
