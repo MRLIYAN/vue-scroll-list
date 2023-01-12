@@ -20,54 +20,19 @@ export default {
         return {
             i:0,
             isContH:false,
-            speed:1,
             isScroll:true,
             option:{}
         }
     },
-    props:['scrollOption'],
-    mounted() {
-        //默认设置无缝滚动
-        this.$set(this.option, 'loop', true);
-        this.option = {...this.scrollOption}
-        console.log(this.option);
-
-        //限制速度，设置1~10
-        if(this.option.speed < 1) { 
-            this.option.speed = 1;
+    props:{
+        scrollOption: {
+            type:Object,
+            default:() => {
+                return {}
+            }
         }
-        if(this.option.speed > 10){
-            this.option.speed = 10;
-        }
-
-        this.$nextTick(() => {
-            if(this.option.loop){
-                // 给视图添加高度，高度是内容的插槽的一个高度，防止无缝滚动外边添加滚动条会导致高度撑开超出，滚动底部出现留白。
-                this.contView().style.height = this.slot0().clientHeight+'px';
-            }
-           
-            //判断初始化是否需要滚动，以及展示第二个
-            if(this.slot0().clientHeight < this.viewH){
-                this.isScroll =false;
-                this.isContH = false;
-            }else{
-                this.scroll();
-                this.isContH = true;
-            }
-
-            if(this.option.hoverStop){
-                this.view().onmouseenter = () => {
-                    this.isScroll = false;
-                }
-                this.view().onmouseleave = () => {
-                    this.isScroll = true;
-                    this.scroll();
-                }
-            }
-        })
-        
     },
-    methods:{
+    computed:{
         view(){ // 最外层视图
             return this.$refs.listScrollContainer;
         },
@@ -81,7 +46,7 @@ export default {
             return this.$refs.listScrollContent;
         },
         contH(){ //内容高度
-            return this.$refs.listScrollContent.clientHeight;
+            return this.$refs.listScrollContent.clientHeight; 
         },
         slot0(){ //插槽1
             return this.$refs.listScrollContent.children[0];
@@ -89,18 +54,62 @@ export default {
         slot1(){ //插槽2
             return this.$refs.listScrollContent.children[1];
         },
+    },
+    mounted() {
+        //默认设置无缝滚动
+        this.$set(this.option, 'loop', true);
+        this.option = {...this.scrollOption}
+        console.log(this.option);
+
+        //限制速度，设置0~100
+        if(this.option.speed <= 0) { 
+            this.option.speed = 0;
+        }
+        if(this.option.speed >= 100){
+            this.option.speed = 100;
+        }
+
+
+        this.$nextTick(() => {
+            if(this.option.loop){
+                // 给视图添加高度，高度是内容的插槽的一个高度，防止无缝滚动外边添加滚动条会导致高度撑开超出，滚动底部出现留白。
+                this.contView.style.height = this.slot0.clientHeight+'px';
+            }
+           
+            //判断初始化是否需要滚动，以及展示第二个
+            if(this.slot0.clientHeight < this.viewH){
+                this.isScroll =false;
+                this.isContH = false;
+            }else{
+                this.scroll();
+                this.isContH = true;
+            }
+
+            if(this.option.hoverStop){
+                this.view.onmouseenter = () => {
+                    this.isScroll = false;
+                }
+                this.view.onmouseleave = () => {
+                    this.isScroll = true;
+                    this.scroll();
+                }
+            }
+        })
+        
+    },
+    methods:{
         scroll(){
             this.$nextTick(() => {
                 if(this.isScroll){
-                    let contH = this.contH();
-                    let viewH = this.viewH();
+                    let contH = this.contH;
+                    let viewH = this.viewH;
                     let cha = 0;
                     
                     if(this.option.loop){
                         //无缝滚动，获取内容高度
-                        cha = this.slot0().clientHeight;
+                        cha = this.slot0.clientHeight;
                         if(this.i < cha){
-                            this.i = this.i + this.option.speed * 0.4;
+                            this.i = this.i + this.option.speed * 0.2;
                         }else{
                             this.i = 0;
                             // this.$emit('scrollEnd','aa');
@@ -108,7 +117,7 @@ export default {
                     }else{
                         cha = contH - viewH;
                         if(this.i < cha){
-                            this.i = this.i + this.option.speed * 0.4;
+                            this.i = this.i + this.option.speed * 0.2;
                         }else{
                             this.i = 0;
                             // 非无缝滚动模式下，滚动到底部触发scrollEnd回调，可以监听是否滚动到底部
@@ -116,7 +125,7 @@ export default {
                         }
                     }
                     
-                    this.cont().style.transform = `translateY(${-this.i}px)`;
+                    this.cont.style.transform = `translateY(${-this.i}px)`;
                     window.requestAnimationFrame(this.scroll)
                 }
             })

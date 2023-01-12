@@ -22,7 +22,7 @@ export default {
     data() {
         return {
             scrollOption:{
-                speed:1.5,//滚动速度 1~10 数字越大速度越快
+                speed:5,//滚动速度 0~100 数字越大速度越快
                 hoverStop:true,//是否开启鼠标悬停
                 loop:true, //是否无缝滚动，默认开启
             }
