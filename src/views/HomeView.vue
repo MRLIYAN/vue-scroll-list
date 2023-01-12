@@ -60,7 +60,13 @@ export default {
                 speed:5,
                 hoverStop:false,
                 loop:true, 
-                direction:'down',
+                direction:'left',
+            },
+            scrollOption4:{
+                speed:5,
+                hoverStop:false,
+                loop:true, 
+                direction:'right',
             }
         }
     },
