@@ -24,7 +24,7 @@ export default {
             scrollOption:{
                 speed:1.5,//滚动速度 1~10 数字越大速度越快
                 hoverStop:true,//是否开启鼠标悬停
-                loop:false, //是否无缝滚动，默认开启
+                loop:true, //是否无缝滚动，默认开启
             }
         }
     },
@@ -46,6 +46,20 @@ export default {
         height: 400px;
         border: 1px solid red;
         overflow: auto;
+    }
+    .list-ctain::-webkit-scrollbar{
+        width:5px;
+        border-radius:5px;
+    }
+    .list-ctain::-webkit-scrollbar-track{
+        width:5px;
+        border-radius: 5px;
+        background:rgba(255,255,255,.9);
+    }
+    .list-ctain::-webkit-scrollbar-thumb{
+        width:5px;
+        border-radius: 5px;
+        background:rgba(0,0,0,.4);
     }
 
     ul {
