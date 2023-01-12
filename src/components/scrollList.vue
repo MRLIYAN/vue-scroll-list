@@ -20,6 +20,9 @@ export default {
     data() {
         return {
             i: 0,
+            idown:0,
+            ileft:0,
+            iright:0,
             isContH: false,
             isScroll: true, //是否允许滚动
             option: {}
@@ -99,12 +102,23 @@ export default {
                 }
 
                 //判断初始化是否需要滚动，以及展示第二个
-                if (this.slot0H < this.viewH) { //视图是否超出
-                    this.isScroll = false;
-                    this.isContH = false;
-                } else {
-                    this.isContH = true;
-                    this.scroll();
+                if(this.option.direction == 'up') {
+                    if (this.slot0H < this.viewH) { //视图是否超出
+                        this.isScroll = false;
+                        this.isContH = false;
+                    } else {
+                        this.isContH = true;
+                        this.scroll();
+                    }
+                }else if(this.option.direction == 'down') {
+                    this.idown = this.slot0H;
+                    if (this.slot0H < this.viewH) { //视图是否超出
+                        this.isScroll = false;
+                        this.isContH = false;
+                    } else {
+                        this.isContH = true;
+                        this.scroll();
+                    }
                 }
 
                 if (this.option.hoverStop) {
@@ -136,8 +150,8 @@ export default {
             })
         },
         scrollUp() {
-            let contH = this.contH;
-            let viewH = this.viewH;
+            let contH = this.contH; //内容高度
+            let viewH = this.viewH; //视图高度
             let cha = 0;
 
             if (this.option.loop) {
@@ -164,7 +178,18 @@ export default {
             window.requestAnimationFrame(this.scroll)
         },
         scrollDown(){
+            let contH = this.slot0H;
+            if (this.option.loop) {
+                //无缝滚动，获取内容高度
+                if (this.idown > 0) {
+                    this.idown = this.idown - this.option.speed * 0.2;
+                } else {
+                    this.idown = contH;
+                }
+            }
 
+            this.cont.style.transform = `translateY(${-this.idown}px)`;
+            window.requestAnimationFrame(this.scroll)
         },
         scrollLeft(){
 

@@ -11,10 +11,21 @@
             </scrollList>
         </div>
 
+        <div class="list-ctain">
+            <scrollList 
+                :scrollOption="scrollOption2"
+                @scrollEnd="scrollEnd"
+            >
+                <ul>
+                    <li v-for="count in 15" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
+                </ul>
+            </scrollList>
+        </div>
+
 
         <div class="list-ctain-h">
             <scrollList 
-                :scrollOption="scrollOption2"
+                :scrollOption="scrollOption3"
                 @scrollEnd="scrollEnd"
             >
                 <div class="list-news">
@@ -34,16 +45,22 @@ export default {
     data() {
         return {
             scrollOption:{
-                speed:5,//滚动速度 0~100 数字越大速度越快
-                hoverStop:true,//是否开启鼠标悬停
-                loop:true, //是否无缝滚动，默认开启
-                direction:'up',//滚动方向
+                speed:5,
+                hoverStop:true,
+                loop:true, 
+                direction:'up',
             },
             scrollOption2:{
-                speed:5,//滚动速度 0~100 数字越大速度越快
-                hoverStop:true,//是否开启鼠标悬停
-                loop:true, //是否无缝滚动，默认开启
-                direction:'left',//滚动方向
+                speed:5,
+                hoverStop:false,
+                loop:true, 
+                direction:'down',
+            },
+            scrollOption3:{
+                speed:5,
+                hoverStop:false,
+                loop:true, 
+                direction:'down',
             }
         }
     },
@@ -65,6 +82,8 @@ export default {
         height: 400px;
         border: 1px solid red;
         overflow: auto;
+        float: left;
+        margin:40px;
     }
     .list-ctain::-webkit-scrollbar{
         width:5px;
@@ -93,9 +112,10 @@ export default {
     .list-ctain-h{
         width:900px;
         border:1px solid red;
-        overflow-x: scroll;
+        overflow-x: auto;
+        margin-top: 40px;
         .list-news{
-            margin-top: 40px;
+            
             display: flex;
             justify-content: flex-start;
             align-items: center;
