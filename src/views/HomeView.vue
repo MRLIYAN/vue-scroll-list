@@ -10,6 +10,18 @@
                 </ul>
             </scrollList>
         </div>
+
+
+        <div class="list-ctain-h">
+            <scrollList 
+                :scrollOption="scrollOption2"
+                @scrollEnd="scrollEnd"
+            >
+                <div class="list-news">
+                    <span v-for="count in 5" :key="count">{{count}}、这是第{{count}}条消息</span>
+                </div>
+            </scrollList>
+        </div>
     </div>
 </template>
 
@@ -24,8 +36,14 @@ export default {
             scrollOption:{
                 speed:5,//滚动速度 0~100 数字越大速度越快
                 hoverStop:true,//是否开启鼠标悬停
-                loop:true //是否无缝滚动，默认开启
-
+                loop:true, //是否无缝滚动，默认开启
+                direction:'up',//滚动方向
+            },
+            scrollOption2:{
+                speed:5,//滚动速度 0~100 数字越大速度越快
+                hoverStop:true,//是否开启鼠标悬停
+                loop:true, //是否无缝滚动，默认开启
+                direction:'left',//滚动方向
             }
         }
     },
@@ -70,5 +88,29 @@ export default {
             margin: 2px 0;
         }
     }
+
+
+    .list-ctain-h{
+        width:900px;
+        border:1px solid red;
+        overflow-x: scroll;
+        .list-news{
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: nowrap;
+            
+
+            span{
+                display: inline-block;
+                line-height: 40px;
+                width:200px;
+                flex-shrink: 0;
+                
+            }
+        }
+    }
+    
 }
 </style>
