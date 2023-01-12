@@ -1,6 +1,6 @@
 <template>
     <div class="listScrollContainer" ref="listScrollContainer">
-        <div class="listScrollContentCtain" ref="listScrollContentCtain">
+        <!-- <div class="listScrollContentCtain" ref="listScrollContentCtain"> -->
             <div :class="['listScrollContent','listScrollContent'+option.direction]" ref="listScrollContent">
                 <div>
                     <slot></slot>
@@ -9,7 +9,7 @@
                     <slot></slot>
                 </div>
             </div>
-        </div>
+        <!-- </div> -->
     </div>
 </template>
 
@@ -42,9 +42,6 @@ export default {
         },
         viewW() { //最外层视图宽度
             return this.$refs.listScrollContainer.clientWidth;
-        },
-        contView() { //内容视图
-            return this.$refs.listScrollContentCtain;
         },
         cont() { //内容
             return this.$refs.listScrollContent;
@@ -98,7 +95,7 @@ export default {
             this.$nextTick(() => {
                 if (this.option.loop && (this.option.direction == 'up' || this.option.direction == 'down') ) {
                     // 给视图添加高度，高度是内容的插槽的一个高度，防止无缝滚动外边添加滚动条会导致高度撑开超出，滚动底部出现留白。
-                    this.contView.style.height = this.slot0.clientHeight + 'px';
+                    this.view.style.height = this.slot0.clientHeight + 'px';
                 }
 
                 //判断初始化是否需要滚动，以及展示第二个
@@ -183,17 +180,13 @@ export default {
 .listScrollContainer {
     // width: 100%;
     // height: 100%;
+    overflow: hidden;
 
     &,
     & * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-    }
-
-    .listScrollContentCtain {
-        // width: 100%;
-        overflow: hidden;
     }
 
     .listScrollContentleft,.listScrollContentright{
