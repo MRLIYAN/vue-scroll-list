@@ -38,28 +38,28 @@ export default {
             return this.$refs.listScrollContainer;
         },
         viewH() { //最外层视图高度
-            return this.$refs.listScrollContainer.clientHeight;
+            return this.$refs.listScrollContainer.getBoundingClientRect().height;
         },
         viewW() { //最外层视图宽度
-            return this.$refs.listScrollContainer.clientWidth;
+            return this.$refs.listScrollContainer.getBoundingClientRect().width;
         },
         cont() { //内容
             return this.$refs.listScrollContent;
         },
         contH() { //内容高度
-            return this.$refs.listScrollContent.clientHeight;
+            return this.$refs.listScrollContent.getBoundingClientRect().height;
         },
         contW() { //内容高度
-            return this.$refs.listScrollContent.clientWidth;
+            return this.$refs.listScrollContent.getBoundingClientRect().width;
         },
         slot0() { //插槽1
             return this.$refs.listScrollContent.children[0];
         },
         slot0H() { //插槽1高度
-            return this.$refs.listScrollContent.children[0].clientHeight;
+            return this.$refs.listScrollContent.children[0].getBoundingClientRect().height;
         },
         slot0W() { //插槽1高度
-            return this.$refs.listScrollContent.children[0].clientWidth;
+            return this.$refs.listScrollContent.children[0].getBoundingClientRect().width;
         },
         slot1() { //插槽2
             return this.$refs.listScrollContent.children[1];
