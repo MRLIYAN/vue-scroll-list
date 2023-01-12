@@ -20,9 +20,6 @@ export default {
     data() {
         return {
             i: 0,
-            idown:0,
-            ileft:0,
-            iright:0,
             isContH: false,
             isScroll: true, //是否允许滚动
             option: {}
