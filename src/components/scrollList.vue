@@ -111,7 +111,7 @@ export default {
                         this.scroll();
                     }
                 }else if(this.option.direction == 'down') {
-                    this.idown = this.slot0H;
+                    this.i = this.slot0H;
                     if (this.slot0H < this.viewH) { //视图是否超出
                         this.isScroll = false;
                         this.isContH = false;
@@ -181,14 +181,14 @@ export default {
             let contH = this.slot0H;
             if (this.option.loop) {
                 //无缝滚动，获取内容高度
-                if (this.idown > 0) {
-                    this.idown = this.idown - this.option.speed * 0.2;
+                if (this.i > 0) {
+                    this.i = this.i - this.option.speed * 0.2;
                 } else {
-                    this.idown = contH;
+                    this.i = contH;
                 }
             }
 
-            this.cont.style.transform = `translateY(${-this.idown}px)`;
+            this.cont.style.transform = `translateY(${-this.i}px)`;
             window.requestAnimationFrame(this.scroll)
         },
         scrollLeft(){
