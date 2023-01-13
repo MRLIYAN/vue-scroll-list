@@ -1,5 +1,6 @@
 <template>
     <div class="homeview">
+        
         <div class="view">
             <div class="list-ctain">
                 <scrollList 
@@ -11,7 +12,7 @@
                     </ul>
                 </scrollList>
             </div>
-            <button @click="pause1">暂停动画</button>
+            <!-- <button @click="pause1">暂停动画</button> -->
         </div>
         
 
@@ -26,7 +27,7 @@
                     </ul>
                 </scrollList>
             </div>
-            <button @click="pause2">暂停动画</button>
+            <!-- <button @click="pause2">暂停动画</button> -->
         </div>
         
 
@@ -57,30 +58,40 @@
             </div>
         </div>
         
+
+        <scrollOption />
     </div>
 </template>
 
 <script>
 import scrollList from '@/components/scrollList.vue';
+import scrollOption from '@/components/scrollOption.vue';
 export default {
     components: {
-        scrollList
+        scrollList,
+        scrollOption
     },
     data() {
         return {
+            optionDetail:[
+                {
+                    key:'',
+                    msg:'',
+                }
+            ],
             scrollOption:{
                 speed:4,
                 hoverStop:true,
                 loop:true, 
                 direction:'up',
-                pause:false,
+                // pause:false,
             },
             scrollOption2:{
                 speed:4,
                 hoverStop:true,
                 loop:true, 
                 direction:'down',
-                pause:false,
+                // pause:false,
             },
             scrollOption3:{
                 speed:7,

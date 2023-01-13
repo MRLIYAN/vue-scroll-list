@@ -104,7 +104,7 @@ export default {
                 //滚动方向,默认向上 up向上 down向下 left向左 right向右
                 direction: this.scrollOption.direction ? this.scrollOption.direction : 'up',
                 //设置动画是否暂停，默认不暂停即false (true暂停动画，false关闭动画)
-                pause:this.scrollOption.pause ? ((this.scrollOption.pause === 'true' || this.scrollOption.pause === true) ? true : false) : false,
+                //pause:this.scrollOption.pause ? ((this.scrollOption.pause === 'true' || this.scrollOption.pause === true) ? true : false) : false,
             }
             //限制速度，设置0~100
             if (this.option.speed <= 0) {
