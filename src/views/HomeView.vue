@@ -26,6 +26,7 @@
                     </ul>
                 </scrollList>
             </div>
+            <button @click="pause2">暂停动画</button>
         </div>
         
 
@@ -64,8 +65,9 @@ export default {
             scrollOption2:{
                 speed:4,
                 hoverStop:true,
-                loop:true, 
+                loop:false, 
                 direction:'down',
+                pause:false,
             },
             scrollOption3:{
                 speed:5,
@@ -87,6 +89,9 @@ export default {
         },
         pause1(){
             this.scrollOption.pause = !this.scrollOption.pause
+        },
+        pause2(){
+            this.scrollOption2.pause = !this.scrollOption2.pause
         },
         scrollEnd(){
             console.log('滚动到底部了');
