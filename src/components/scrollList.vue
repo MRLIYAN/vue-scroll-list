@@ -117,6 +117,9 @@ export default {
         },
         initScroll() {
             this.$nextTick(() => {
+                //内容是否超出视图
+                this.isOverView = this.slot0H > this.viewH ? true : false;
+
                 /**
                  * 开启无缝滚动，向上，向下的时候，给视图设置高度，高度是内容的插槽的一个高度，
                  * 防止无缝滚动克隆内容导致的高度是内容高度的两倍
@@ -124,8 +127,6 @@ export default {
                  */
                 if (this.option.loop && (this.option.direction == 'up' || this.option.direction == 'down') ) {
                     this.contCtain.style.height = this.slot0H + 'px';
-                    //内容是否超出视图
-                    this.isOverView = this.slot0H > this.viewH ? true : false;
                 }
 
                 //判断初始化是否需要滚动，以及展示第二个
@@ -140,14 +141,14 @@ export default {
                     }
 
                 }else if(this.option.direction == 'down') {
-                    //无缝滚动，默认初始化设置高度，默认展示第二个克隆内容，向下滚动方便实现无缝滚动
-                    // if(this.option.loop){
-                    //     this.i = this.slot0H;
-                    // }
                     //是否展示克隆内容，或者插槽2内容
                     this.isShow = this.option.loop ? true : false;
                     //根据视图超出判断默认是否滚动
                     this.isScroll = this.isOverView ? true : false;
+
+                    if(!this.option.loop){
+                        this.i = this.slot0H - this.viewH;
+                    }
 
                     if(this.isScroll){
                         this.scroll();
@@ -217,19 +218,20 @@ export default {
             }
         },
         scrollDown(){
-            let contH = this.slot0H;
             if (this.option.loop) {
                 //无缝滚动，获取内容高度
+                let contH = this.slot0H;
                 if (this.i > 0) {
                     this.i = this.i - this.option.speed * 0.2;
                 } else {
                     this.i = contH;
                 }
             }else{
+                let cha = this.slot0H - this.viewH;
                 if(this.i > 0){
                     this.i = this.i - this.option.speed * 0.2;
                 } else {
-                    this.i = 0
+                    this.i = cha
                 }
             }
 
