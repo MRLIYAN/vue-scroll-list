@@ -17,7 +17,6 @@
 </template>
 
 <script>
-
 export default {
     name: 'scrollList',
     data() {
@@ -56,7 +55,7 @@ export default {
         contH() { //内容高度
             return this.$refs.listScrollContent.getBoundingClientRect().height;
         },
-        contW() { //内容高度
+        contW() { //内容宽度
             return this.$refs.listScrollContent.getBoundingClientRect().width;
         },
         slot0() { //插槽1
@@ -73,24 +72,25 @@ export default {
         },
     },
     watch:{
-        'scrollOption.pause'(){
-            this.initProps();
-        },
-        'option.pause'(){
-            if(this.option.pause){
-                this.isScroll = false;
-            }else{
-                this.isScroll = true;
-                if(this.isOverView){//所有滚动的前提必须是内容必须超出视图才可以滚动
-                    this.scroll();
-                }
-            }
-        }
+        // 'scrollOption.pause'(){
+        //     this.initProps();
+        // },
+        // 'option.pause'(){
+        //     if(this.option.pause){
+        //         this.isScroll = false;
+        //     }else{
+        //         this.isScroll = true;
+        //     }
+        // },
+        // 'isScroll'(){
+        //     this.scroll();
+        // }
     },
     mounted() {
         //默认参数
         this.initProps();
         this.initScroll();
+        
     },
     methods: {
         initProps() {
@@ -122,6 +122,10 @@ export default {
                     this.isOverView = this.slot0H > this.viewH ? true : false;
                 }
                 //内容宽度是否超出视图
+                if(this.option.direction == 'left' || this.option.direction == 'right'){
+                    this.isOverView = this.slot0W > this.viewW ? true : false;
+                }
+                //内容宽度是否超出视图
                 // if(this.option.direction == 'left' || this.option.direction == 'right'){
                 //     this.isOverView = this.slot0W > this.viewW ? true : false;
                 // }
@@ -133,6 +137,10 @@ export default {
                  */
                 if (this.option.loop && (this.option.direction == 'up' || this.option.direction == 'down') ) {
                     this.contCtain.style.height = this.slot0H + 'px';
+                }
+                // 设置宽度，同上面设置高度同理
+                if (this.option.loop && (this.option.direction == 'left' || this.option.direction == 'right') ) {
+                    this.contCtain.style.width = this.slot0W + 'px';
                 }
 
                 //判断初始化是否需要滚动，以及展示第二个
@@ -155,6 +163,30 @@ export default {
                     if(this.isScroll){
                         this.scroll();
                     }
+                }else if(this.option.direction == 'left') {
+                    //是否展示克隆内容，或者插槽2内容
+                    this.isShow = this.option.loop ? true : false;
+                    //开启无缝滚动，滚动，没开启判断是否视图超出滚动
+                    if(this.option.loop){
+                        this.isScroll = true;
+                    }else{
+                        this.isScroll = this.isOverView ? true : false;
+                    }
+                    if(this.isScroll){
+                        this.scroll()
+                    }
+                }else if(this.option.direction == 'right') {
+                    //是否展示克隆内容，或者插槽2内容
+                    this.isShow = this.option.loop ? true : false;
+                    //开启无缝滚动，滚动，没开启判断是否视图超出滚动
+                    if(this.option.loop){
+                        this.isScroll = true;
+                    }else{
+                        this.isScroll = this.isOverView ? true : false;
+                    }
+                    if(this.isScroll){
+                        this.scroll()
+                    }
                 }
 
                 //设置鼠标hover悬停
@@ -164,11 +196,8 @@ export default {
                     }
                     this.view.onmouseleave = () => {
                         //滚动的首要前提是必须内容超过视图高度
-                        if(this.isOverView){
-                            this.isScroll = true;
-                            this.scroll();
-                        }
-                       
+                        this.isScroll = true;
+                        this.scroll();
                     }
                 }
             })
@@ -187,8 +216,12 @@ export default {
                     }
                 }
             })
+            
         },
         scrollUp() {
+            if(!this.isOverView){//所有滚动的前提必须是内容必须超出视图才可以滚动
+                return false;
+            }
             let contH = this.contH; //内容高度
             let viewH = this.viewH; //视图高度
             let cha = 0;
@@ -220,6 +253,9 @@ export default {
             }
         },
         scrollDown(){
+            if(!this.isOverView){//所有滚动的前提必须是内容必须超出视图才可以滚动
+                return false;
+            }
             if (this.option.loop) {
                 //无缝滚动，获取内容高度
                 let contH = this.slot0H;
@@ -243,10 +279,60 @@ export default {
             }
         },
         scrollLeft(){
+            //设置不无缝滚动，就要判判断超出视图不滚动
+            if(!this.option.loop){
+                if(!this.isOverView){
+                    return false;
+                }
+            }
+            if(this.option.loop){
+                let contW = this.slot0W;
+                if(this.i < contW){
+                    this.i = this.i + this.option.speed * 0.2;
+                }else{
+                    this.i = 0;
+                }
+            }else{
+                let cha = this.slot0W - this.viewW;
+                if(this.i < cha){
+                    this.i = this.i + this.option.speed * 0.2;
+                }else{
+                    this.i = 0;
+                }
+            }
 
+            this.cont.style.transform = `translateX(${-this.i}px)`;
+            if(this.isScroll){
+                window.requestAnimationFrame(this.scroll)
+            }
         },
         scrollRight(){
+            //设置不无缝滚动，就要判判断超出视图不滚动
+            if(!this.option.loop){
+                if(!this.isOverView){
+                    return false;
+                }
+            }
+            if(this.option.loop){
+                let contW = this.slot0W;
+                if(this.i > 0){
+                    this.i = this.i - this.option.speed * 0.2;
+                }else{
+                    this.i = contW;
+                }
+            }else{
+                let cha = this.slot0W - this.viewW;
+                if(this.i > 0){
+                    this.i = this.i - this.option.speed * 0.2;
+                }else{
+                    this.i = cha;
+                }
+            }
 
+            this.cont.style.transform = `translateX(${-this.i}px)`;
+            if(this.isScroll){
+                window.requestAnimationFrame(this.scroll)
+            }
         }
     }
 }
@@ -272,8 +358,9 @@ export default {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        flex-wrap: nowrap;
-        div{
+        flex-wrap:nowrap;
+        &>div{
+            // display: inline-block;
             flex-shrink: 0;
         }
     }

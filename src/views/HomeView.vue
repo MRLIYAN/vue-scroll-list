@@ -43,6 +43,19 @@
                 </scrollList>
             </div>
         </div>
+
+        <div class="view">
+            <div class="list-ctain-h">
+                <scrollList 
+                    :scrollOption="scrollOption4"
+                    @scrollEnd="scrollEnd"
+                >
+                    <div class="list-news">
+                        <span v-for="count in 5" :key="count">{{count}}、这是第{{count}}条消息</span>
+                    </div>
+                </scrollList>
+            </div>
+        </div>
         
     </div>
 </template>
@@ -70,15 +83,15 @@ export default {
                 pause:false,
             },
             scrollOption3:{
-                speed:5,
-                hoverStop:false,
+                speed:7,
+                hoverStop:true,
                 loop:true, 
                 direction:'left',
             },
             scrollOption4:{
-                speed:5,
-                hoverStop:false,
-                loop:true, 
+                speed:7,
+                hoverStop:true,
+                loop:false, 
                 direction:'right',
             }
         }
@@ -139,8 +152,8 @@ export default {
     .list-ctain-h{
         width:900px;
         border:1px solid red;
-        overflow-x: auto;
         margin-top: 40px;
+        overflow:hidden;
         .list-news{
             
             display: flex;
