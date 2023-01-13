@@ -117,8 +117,14 @@ export default {
         },
         initScroll() {
             this.$nextTick(() => {
-                //内容是否超出视图
-                this.isOverView = this.slot0H > this.viewH ? true : false;
+                //内容高度是否超出视图
+                if(this.option.direction == 'up' || this.option.direction == 'down'){
+                    this.isOverView = this.slot0H > this.viewH ? true : false;
+                }
+                //内容宽度是否超出视图
+                if(this.option.direction == 'left' || this.option.direction == 'right'){
+                    this.isOverView = this.slot0W > this.viewW ? true : false;
+                }
 
                 /**
                  * 开启无缝滚动，向上，向下的时候，给视图设置高度，高度是内容的插槽的一个高度，
