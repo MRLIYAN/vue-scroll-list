@@ -1,15 +1,13 @@
 <template>
     <div class="listScrollContainer" ref="listScrollContainer">
-        <!-- <div class="listScrollContentCtain" ref="listScrollContentCtain"> -->
-            <div :class="['listScrollContent','listScrollContent'+option.direction]" ref="listScrollContent">
-                <div>
-                    <slot></slot>
-                </div>
-                <div v-if="isContH && option.loop">
-                    <slot></slot>
-                </div>
+        <div :class="['listScrollContent','listScrollContent'+option.direction]" ref="listScrollContent">
+            <div>
+                <slot></slot>
             </div>
-        <!-- </div> -->
+            <div v-if="isContH && option.loop">
+                <slot></slot>
+            </div>
+        </div>
     </div>
 </template>
 
