@@ -1,38 +1,48 @@
 <template>
     <div class="homeview">
-        <div class="list-ctain">
-            <scrollList 
-                :scrollOption="scrollOption"
-                @scrollEnd="scrollEnd"
-            >
-                <ul>
-                    <li v-for="count in 15" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
-                </ul>
-            </scrollList>
+        <div class="view">
+            <div class="list-ctain">
+                <scrollList 
+                    :scrollOption="scrollOption"
+                    @scrollEnd="scrollEnd"
+                >
+                    <ul>
+                        <li v-for="count in 15" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
+                    </ul>
+                </scrollList>
+            </div>
+            <button @click="pause1">暂停动画</button>
         </div>
+        
 
-        <div class="list-ctain">
-            <scrollList 
-                :scrollOption="scrollOption2"
-                @scrollEnd="scrollEnd"
-            >
-                <ul>
-                    <li v-for="count in 15" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
-                </ul>
-            </scrollList>
+        <div class="view">
+            <div class="list-ctain">
+                <scrollList 
+                    :scrollOption="scrollOption2"
+                    @scrollEnd="scrollEnd"
+                >
+                    <ul>
+                        <li v-for="count in 15" :key="count" @click="msg(count)">{{ count }}、消息消息消息</li>
+                    </ul>
+                </scrollList>
+            </div>
         </div>
+        
 
 
-        <div class="list-ctain-h">
-            <scrollList 
-                :scrollOption="scrollOption3"
-                @scrollEnd="scrollEnd"
-            >
-                <div class="list-news">
-                    <span v-for="count in 5" :key="count">{{count}}、这是第{{count}}条消息</span>
-                </div>
-            </scrollList>
+        <div class="view">
+            <div class="list-ctain-h">
+                <scrollList 
+                    :scrollOption="scrollOption3"
+                    @scrollEnd="scrollEnd"
+                >
+                    <div class="list-news">
+                        <span v-for="count in 5" :key="count">{{count}}、这是第{{count}}条消息</span>
+                    </div>
+                </scrollList>
+            </div>
         </div>
+        
     </div>
 </template>
 
@@ -45,15 +55,16 @@ export default {
     data() {
         return {
             scrollOption:{
-                speed:3,
+                speed:4,
                 hoverStop:true,
                 loop:true, 
                 direction:'up',
+                pause:false,
             },
             scrollOption2:{
                 speed:4,
-                hoverStop:false,
-                loop:true, 
+                hoverStop:true,
+                loop:false, 
                 direction:'down',
             },
             scrollOption3:{
@@ -74,8 +85,11 @@ export default {
         msg(val){
             alert(val)
         },
-        scrollEnd(val){
-            console.log(val);
+        pause1(){
+            this.scrollOption.pause = !this.scrollOption.pause
+        },
+        scrollEnd(){
+            console.log('滚动到底部了');
         }
     }
 }
@@ -83,13 +97,15 @@ export default {
 
 <style lang="scss" scoped>
 .homeview {
+    .view{
+        display: inline-block;
+        margin:40px;
+    }
     .list-ctain {
         width: 400px;
         height: 400px;
         border: 1px solid red;
         overflow: auto;
-        float: left;
-        margin:40px;
     }
     .list-ctain::-webkit-scrollbar{
         width:5px;

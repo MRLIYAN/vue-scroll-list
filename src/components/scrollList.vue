@@ -1,11 +1,16 @@
 <template>
+    <!-- 最外层视图，默认宽高100%，方便获取使用者设置的视图宽高，判断内容是否超出视图 -->
     <div class="listScrollContainer" ref="listScrollContainer">
-        <div :class="['listScrollContent','listScrollContent'+option.direction]" ref="listScrollContent">
-            <div>
-                <slot></slot>
-            </div>
-            <div v-if="isContH && option.loop">
-                <slot></slot>
+        <!-- 内容视图，设置内容的宽度高度，防止克隆内容导致的宽高会默认两倍 -->
+        <div class="listScrollContentContain" ref="listScrollContentContain">
+            <!-- 真实内容宽高，无论克隆不可隆内容，或者插槽2是否展示，内容占据的实际宽高，并且是移动的对象 -->
+            <div :class="['listScrollContent','listScrollContent'+option.direction]" ref="listScrollContent">
+                <div>
+                    <slot></slot>
+                </div>
+                <div v-if="isShow">
+                    <slot></slot>
+                </div>
             </div>
         </div>
     </div>
@@ -18,8 +23,9 @@ export default {
     data() {
         return {
             i: 0,
-            isContH: false,
-            isScroll: true, //是否允许滚动
+            isShow: false, // 是否展示克隆内容
+            isScroll: true, // 是否允许滚动
+            isOverView:false, // 内容是否超出视图
             option: {}
         }
     },
@@ -40,6 +46,9 @@ export default {
         },
         viewW() { //最外层视图宽度
             return this.$refs.listScrollContainer.getBoundingClientRect().width;
+        },
+        contCtain(){ //内容视图
+            return this.$refs.listScrollContentContain;
         },
         cont() { //内容
             return this.$refs.listScrollContent;
@@ -63,6 +72,21 @@ export default {
             return this.$refs.listScrollContent.children[1];
         },
     },
+    watch:{
+        'scrollOption.pause'(){
+            this.initProps();
+        },
+        'option.pause'(){
+            if(this.option.pause){
+                this.isScroll = false;
+            }else{
+                this.isScroll = true;
+                if(this.isOverView){//所有滚动的前提必须是内容必须超出视图才可以滚动
+                    this.scroll();
+                }
+            }
+        }
+    },
     mounted() {
         //默认参数
         this.initProps();
@@ -78,7 +102,9 @@ export default {
                 //是否无缝滚动，默认开启
                 loop: (this.scrollOption.loop) ? ((this.scrollOption.loop === 'true' || this.scrollOption.loop === true) ? true : false) : ((this.scrollOption.loop === 'false' || this.scrollOption.loop === false) ? false : true),
                 //滚动方向,默认向上 up向上 down向下 left向左 right向右
-                direction: this.scrollOption.direction ? this.scrollOption.direction : 'up'
+                direction: this.scrollOption.direction ? this.scrollOption.direction : 'up',
+                //设置动画是否暂停，默认不暂停即false (true暂停动画，false关闭动画)
+                pause:this.scrollOption.pause ? ((this.scrollOption.pause === 'true' || this.scrollOption.pause === true) ? true : false) : false,
             }
             //限制速度，设置0~100
             if (this.option.speed <= 0) {
@@ -91,40 +117,55 @@ export default {
         },
         initScroll() {
             this.$nextTick(() => {
+                /**
+                 * 开启无缝滚动，向上，向下的时候，给视图设置高度，高度是内容的插槽的一个高度，
+                 * 防止无缝滚动克隆内容导致的高度是内容高度的两倍
+                 * 防止无缝滚动外边添加滚动条会导致高度撑开超出，滚动底部出现留白。
+                 */
                 if (this.option.loop && (this.option.direction == 'up' || this.option.direction == 'down') ) {
-                    // 给视图添加高度，高度是内容的插槽的一个高度，防止无缝滚动外边添加滚动条会导致高度撑开超出，滚动底部出现留白。
-                    this.view.style.height = this.slot0.clientHeight + 'px';
+                    this.contCtain.style.height = this.slot0H + 'px';
+                    //内容是否超出视图
+                    this.isOverView = this.slot0H > this.viewH ? true : false;
                 }
 
                 //判断初始化是否需要滚动，以及展示第二个
                 if(this.option.direction == 'up') {
-                    if (this.slot0H < this.viewH) { //视图是否超出
-                        this.isScroll = false;
-                        this.isContH = false;
-                    } else {
-                        this.isContH = true;
+                    //是否展示克隆内容，或者插槽2内容
+                    this.isShow = this.option.loop ? true : false;
+                    //根据视图超出判断默认是否滚动，所有滚动的前提必须是内容必须超出视图才可以滚动
+                    this.isScroll = this.isOverView ? true : false;
+
+                    if(this.isScroll){
                         this.scroll();
                     }
+
                 }else if(this.option.direction == 'down') {
-                    this.i = this.slot0H;
-                    if (this.slot0H < this.viewH) { //视图是否超出
-                        this.isScroll = false;
-                        this.isContH = false;
-                    } else {
-                        this.isContH = true;
+                    //无缝滚动，默认初始化设置高度，默认展示第二个克隆内容，向下滚动方便实现无缝滚动
+                    // if(this.option.loop){
+                    //     this.i = this.slot0H;
+                    // }
+                    //是否展示克隆内容，或者插槽2内容
+                    this.isShow = this.option.loop ? true : false;
+                    //根据视图超出判断默认是否滚动
+                    this.isScroll = this.isOverView ? true : false;
+
+                    if(this.isScroll){
                         this.scroll();
                     }
                 }
 
+                //设置鼠标hover悬停
                 if (this.option.hoverStop) {
                     this.view.onmouseenter = () => {
                         this.isScroll = false;
                     }
                     this.view.onmouseleave = () => {
-                        if (this.isContH) { //内容超出视图才允许滚动
+                        //滚动的首要前提是必须内容超过视图高度
+                        if(this.isOverView){
                             this.isScroll = true;
                             this.scroll();
                         }
+                       
                     }
                 }
             })
@@ -151,26 +192,29 @@ export default {
 
             if (this.option.loop) {
                 //无缝滚动，获取内容高度
-                cha = this.slot0.clientHeight;
+                cha = this.slot0H;
                 if (this.i < cha) {
                     this.i = this.i + this.option.speed * 0.2;
                 } else {
                     this.i = 0;
-                    // this.$emit('scrollEnd','aa');
+                    // this.$emit('scrollEnd');
                 }
             } else {
+                //非无缝滚动，获取内容高度和视图高度的计算偏差，作为移动偏移量判断
                 cha = contH - viewH;
                 if (this.i < cha) {
                     this.i = this.i + this.option.speed * 0.2;
                 } else {
                     this.i = 0;
                     // 非无缝滚动模式下，滚动到底部触发scrollEnd回调，可以监听是否滚动到底部
-                    this.$emit('scrollEnd', 'aa');
+                    this.$emit('scrollEnd');
                 }
             }
 
             this.cont.style.transform = `translateY(${-this.i}px)`;
-            window.requestAnimationFrame(this.scroll)
+            if(this.isScroll){
+                window.requestAnimationFrame(this.scroll);
+            }
         },
         scrollDown(){
             let contH = this.slot0H;
@@ -181,10 +225,18 @@ export default {
                 } else {
                     this.i = contH;
                 }
+            }else{
+                if(this.i > 0){
+                    this.i = this.i - this.option.speed * 0.2;
+                } else {
+                    this.i = 0
+                }
             }
 
             this.cont.style.transform = `translateY(${-this.i}px)`;
-            window.requestAnimationFrame(this.scroll)
+            if(this.isScroll){
+                window.requestAnimationFrame(this.scroll)
+            }
         },
         scrollLeft(){
 
@@ -198,15 +250,18 @@ export default {
 
 <style lang="scss" scoped>
 .listScrollContainer {
-    // width: 100%;
-    // height: 100%;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
 
     &,
     & * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+    }
+
+    .listScrollContentContain{
+        overflow: hidden;
     }
 
     .listScrollContentleft,.listScrollContentright{
