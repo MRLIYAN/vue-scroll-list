@@ -64,7 +64,7 @@ export default {
                     key:'hoverStop',
                     defaultVal:'false',
                     val:'true / false',
-                    msg:'是否开启鼠标悬停,默认关闭'
+                    msg:'是否开启鼠悬浮、滚动停止，默认关闭'
                 },
                 {
                     key:'loop',
