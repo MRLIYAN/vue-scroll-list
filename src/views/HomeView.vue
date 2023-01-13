@@ -91,7 +91,7 @@ export default {
             scrollOption4:{
                 speed:7,
                 hoverStop:true,
-                loop:false, 
+                loop:true, 
                 direction:'right',
             }
         }
