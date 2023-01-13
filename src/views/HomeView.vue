@@ -65,7 +65,7 @@ export default {
             scrollOption2:{
                 speed:4,
                 hoverStop:true,
-                loop:false, 
+                loop:true, 
                 direction:'down',
                 pause:false,
             },
