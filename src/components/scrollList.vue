@@ -125,10 +125,6 @@ export default {
                 if(this.option.direction == 'left' || this.option.direction == 'right'){
                     this.isOverView = this.slot0W > this.viewW ? true : false;
                 }
-                //内容宽度是否超出视图
-                // if(this.option.direction == 'left' || this.option.direction == 'right'){
-                //     this.isOverView = this.slot0W > this.viewW ? true : false;
-                // }
 
                 /**
                  * 开启无缝滚动，向上，向下的时候，给视图设置高度，高度是内容的插槽的一个高度，
